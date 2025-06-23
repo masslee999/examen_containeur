@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Cours de DevOps</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>École Supérieure</h2>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="active"><i>📊</i> Tableau de bord</a></li>
+                    <li><a href="#"><i>👨‍🎓</i> Étudiants</a></li>
+                    <li><a href="#"><i>📚</i> Cours</a></li>
+                    <li><a href="#"><i>📝</i> Examens</a></li>
+                    <li><a href="#"><i>📅</i> Calendrier</a></li>
+                    <li><a href="#"><i>⚙️</i> Paramètres</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <h1>Cours de DevOps</h1>
+                <div class="user-info">
+                    <img src="https://via.placeholder.com/40" alt="Profil">
+                    <span>Administrateur</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Liste des étudiants inscrits</h2>
+                    <div class="search-bar">
+                        <span>🔍</span>
+                        <input type="text" placeholder="Rechercher un étudiant...">
+                    </div>
+                </div>
+
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénoms</th>
+                            <th>Email</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.fname }}</td>
+                                    <td>{{ student.sname }}</td>
+                                    <td>{{ student.email }}</td>
+                                    <td><span class="status active">{{ student.active }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <!--<div class="pagination">
+                    <button>Précédent</button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>Suivant</button>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

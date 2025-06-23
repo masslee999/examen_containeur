@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from DashBoardForStudent.views import home
+from DjangoDashBoard.DashBoardForStudent.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),

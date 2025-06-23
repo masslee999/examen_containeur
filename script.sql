@@ -1,0 +1,6 @@
+-- Sélection de la base de données pour y travailler
+USE students;
+
+ALTER TABLE devstudents MODIFY active VARCHAR(10) DEFAULT 'Active';
+
+ALTER TABLE devstudents MODIFY creation_date DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6);

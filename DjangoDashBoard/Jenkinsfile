@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_USERNAME = "odoo15"
+        IMAGE_VERSION = "1.${BUILD_NUMBER}"
+        DJANGO_IMAGE = "${DOCKER_USERNAME}/examen_django:${IMAGE_VERSION}"
+        BOT_IMAGE = "${DOCKER_USERNAME}/examen_bot:${IMAGE_VERSION}"
+        COMPOSE_PROJECT_NAME = "examen_${BUILD_NUMBER}"
+    }
+    stages {
+        stage("Cloner le dépôt") {
+            steps {
+                git branch: 'main', url: 'https://github.com/masslee999/examen_containeur.git'
+            }
+        }
+        stage("Tests fictifs") {
+            steps {
+                echo "Tests fictifs passés avec succès (aucun test automatisé réel ici)"
+            }
+        }
+        stage("Construire les images Docker") {
+            steps {
+                script {
+                    // Vérifie que Docker est bien disponible, sinon échoue proprement
+                    sh 'command -v docker || { echo "Docker non installé sur l’agent Jenkins"; exit 1; }'
+                    // Construction des images Docker
+                    sh "docker build -t ${DJANGO_IMAGE} ./DjangoDashBoard"
+                    sh "docker build -t ${BOT_IMAGE} ./Telegram_bot"
+                }
+            }
+        }
+        stage("Push vers Docker Hub") {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'odoo15',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    script {
+                        sh """
+                        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
+                        docker push ${DJANGO_IMAGE}
+                        docker push ${BOT_IMAGE}
+                        """
+                    }
+                }
+            }
+        }
+        stage("Déployer les conteneurs") {
+            steps {
+                script {
+                    sh """
+                    docker container stop ${DJANGO_CONTAINER} || true
+                    docker container rm ${DJANGO_CONTAINER} || true
+                    docker run -d --name ${DJANGO_CONTAINER} -p 8000:8000 ${DJANGO_IMAGE}
+                    docker container stop ${BOT_CONTAINER} || true
+                    docker container rm ${BOT_CONTAINER} || true
+                    docker run -d --name ${BOT_CONTAINER} ${BOT_IMAGE}
+                    """
+                }
+            }
+        }
+    }
+    post {
+        success {
+            // :warning: Ce mail ne sera envoyé que si un SMTP est bien configuré
+            echo "Déploiement réussi – pas de mail envoyé car aucun SMTP n’est défini."
+        }
+        failure {
+            echo "Échec du déploiement – pense à configurer un serveur mail dans Jenkins si tu veux recevoir une notification."
+        }
+    }
+}
+
+
+

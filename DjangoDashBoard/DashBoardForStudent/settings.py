@@ -15,18 +15,18 @@ from dotenv import load_dotenv
 import os
 
 
-# Chargement des variables d'environnement
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Chargement des variables d'environnement
+load_dotenv(dotenv_path=BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_KEY')
+SECRET_KEY = "django-insecure-d565^2glcnyc2_3^#&#38myh9!9+y1+1uitff#(ijq#%g88xo4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': os.getenv("DB_NAME"),              # nom de ta base MySQL
         'USER': os.getenv("DB_USER"),             # ex: 'root'
         'PASSWORD': os.getenv("DB_PASSWORD"),        # mot de passe MySQL
-        'HOST': os.getenv("DB_HOST"),                   # ou l’IP du serveur MySQL
+        'HOST': 'db',                   # ou l’IP du serveur MySQL
         'PORT': os.getenv("DB_PORT")
     }
 }
